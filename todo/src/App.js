@@ -1,5 +1,5 @@
 import './App.css';
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 
 
 function App() {
@@ -7,9 +7,9 @@ function App() {
   const [todos, setTodos] = useState('')
   const [todos2, setTodos2] = useState([])
   const [isChecked, setIsChecked] = useState([]);
-  console.log(isChecked , 'val')
 
-  console.log(todos, "todo")
+  console.log(todos, "todo typing")
+  console.log(isChecked, 'checked?')
   console.log(todos2, "todos")
 
   function handleChange(event) {
@@ -20,23 +20,41 @@ function App() {
     event.preventDefault();
     setTodos2([...todos2, todos])
     setTodos('')
-    setIsChecked([...isChecked , false])
+    setIsChecked([...isChecked, false])
+
   }
 
   function Delete(i) {
-    console.log(i, "inex")
+    console.log(i, "index deleted")
     todos2.splice(i, 1)
-    // console.log(todos2, 'deleted')
     setTodos2([...todos2])
-    alert("todos Deleted")
+    isChecked.splice(i, 1)
+    setIsChecked([...isChecked])
+    // console.log(todos2, 'deleted')
+    // alert("todos Deleted")
   }
 
   function check(i) {
-    (isChecked[i]) == false ?  setIsChecked([...isChecked , isChecked[i] = true]) : setIsChecked([...isChecked , isChecked[i] = false]) 
-    // console.log(event.target.value, 'event.target.value')
+    var doc = document.getElementsByClassName('checkbox')
+    // console.log(doc[i].checked, i)
+    if (doc[i].checked == true) {
+      var updatedVal = [...isChecked]
+      updatedVal[i] = true;
+      setIsChecked(updatedVal)
+      console.log(doc[i], 'is ', isChecked[i])
+    }
+    else {
+      var updatedVal = [...isChecked]
+      updatedVal[i] = false;
+      setIsChecked(updatedVal)
+      console.log(doc[i], 'is ', isChecked[i])
+    }
   }
 
-  // console.log(check)
+  // useEffect(() => {
+  //   setIsChecked([...isChecked])
+  //   setTodos2([...todos2]);
+  // } , [isChecked] , [todos2])
 
   return (
     <div className="App">
@@ -50,8 +68,10 @@ function App() {
         {todos2?.map((pro, i) => (
           <>
             <div key={i} className='singleDiv'>
-              <h1>{pro} <input className='checkbox' type='checkbox' checked={isChecked[i]} onClick={() => check(i)}/> </h1>
-              {isChecked[i] == true && <button onClick={() => Delete()}>Delete</button>}
+              <h1>{pro} <input className='checkbox' type='checkbox' value={`index${i}`} checked={isChecked[i]} onClick={() => check(i)} /> </h1>
+              {isChecked[i] == true &&
+                <button onClick={() => Delete(i)}>Delete</button>
+              }
             </div>
           </>
         ))}
